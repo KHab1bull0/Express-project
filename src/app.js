@@ -9,7 +9,11 @@ export const app = express();
 app.use(express.json());
 app.use("/api", router);
 
-await connectDB();
+const initializeApp = async () => {
+  await connectDB();
+};
+
+initializeApp().catch(console.error);
 
 const swaggerOptions = {
   swaggerDefinition: {

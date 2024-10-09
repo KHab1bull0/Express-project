@@ -1,6 +1,8 @@
 import express from "express";
 import { userController } from "../controller/user.controller.js";
-import { auth, roleGuard } from "../common/middleware/auth.middleware.js";
+import { authGuard } from "../common/middleware/auth.guard.js"; 
+import { roleGuard } from "../common/middleware/role.guard.js";
+
 
 const userRouter = express.Router();
 
@@ -182,18 +184,18 @@ const userRouter = express.Router();
  *         description: Foydalanuvchi topilmadi
  */
 
-userRouter.get("/users", auth, roleGuard("admin"), userController.getAllUsers);
+userRouter.get("/users", authGuard, roleGuard("admin"), userController.getAllUsers);
 userRouter.post("/users", userController.createUser);
 userRouter.post("/users/login", userController.loginUser);
 userRouter.delete(
   "/users/:id",
-  auth,
+  authGuard,
   roleGuard("admin"),
   userController.deleteUser
 );
 userRouter.put(
   "/users/:id",
-  auth,
+  authGuard,
   roleGuard("admin"),
   userController.updateUser
 );

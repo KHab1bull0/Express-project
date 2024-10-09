@@ -24,6 +24,7 @@ export const userController = {
         success: true,
       });
     } catch (error) {
+      console.error('Error creating user:', error); // Xatolikni qayd etish
       return res.status(500).json({ error: error.message });
     }
   },
@@ -31,7 +32,9 @@ export const userController = {
   async loginUser(req, res) {
     try {
       const user = await User.findOne({ username: req.body.username });
-      if (user && (await bcrypt.compare(req.body.password, user.password))) {
+      if(!user) return res.status(404).send({ message: "User not found" });
+      
+      if (await bcrypt.compare(req.body.password, user.password)) {
         const token = jwt.sign(
           { id: user._id, role: user.role },
           process.env.JWT_SECRET

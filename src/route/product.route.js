@@ -1,7 +1,8 @@
 import express from "express";
 import multer from "multer";
 import { productController } from "../controller/product.controller.js";
-import { auth, roleGuard } from '../common/middleware/auth.middleware.js';
+import { roleGuard } from "../common/middleware/role.guard.js";
+import { authGuard } from "../common/middleware/auth.guard.js";
 
 const productRouter = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -182,8 +183,8 @@ const upload = multer({ storage: multer.memoryStorage() });
  */
 
 productRouter.get("/products", productController.getAllProducts);
-productRouter.post("/products", auth, roleGuard('admin'), upload.single('image'), productController.createProduct);
-productRouter.put("/products/:id", auth, roleGuard('admin'), upload.single('image'), productController.updateProduct);
-productRouter.delete("/products/:id", auth, roleGuard('admin'), productController.deleteProduct);
+productRouter.post("/products", authGuard, roleGuard('admin'), upload.single('image'), productController.createProduct);
+productRouter.put("/products/:id", authGuard, roleGuard('admin'), upload.single('image'), productController.updateProduct);
+productRouter.delete("/products/:id", authGuard, roleGuard('admin'), productController.deleteProduct);
 
 export default productRouter;
